@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+    db:
+        container_name: mariadb
+        image: mariadb:latest
+        volumes:
+            - ./mariadb:/var/lib/mysql
+        #restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            - "MYSQL_ROOT_PASSWORD=password"
+            - "MYSQL_DATABASE=xe"
+            - "MYSQL_USER=xe"
+            - "MYSQL_PASSWORD=xe"
+
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin/phpmyadmin:latest
+        depends_on:
+            - db
+        environment:
+            - "PMA_HOST=db"
+        #    - "PMA_USER=##"
+        #    - "PMA_PASSWORD=##"
+        ports:
+            - "8000:80"
+
+    xe1:
+        container_name: xe1
+        image: duwon/xpressengine:1
+        #restart: always
+        depends_on:
+            - db
+        ports:
+            - 8001:80
+
+    xe3:
+        container_name: xe3
+        image: duwon/xpressengine:3
+        #restart: always
+        depends_on:
+            - db
+        ports:
+            - 8002:80            

@@ -4,7 +4,7 @@
 
 FROM php:7.2-apache
 
-MAINTAINER Sunggun Yu <sunggun.dev@gmail.com>
+MAINTAINER Duwon Jung <duwonet@gmail.com>
 
 # Install required packages
 RUN set -x \
@@ -16,6 +16,8 @@ RUN set -x \
     ca-certificates \
     apt-transport-https \
     git \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \    
     zlib1g-dev \
     libpng-dev \
     libcurl4-openssl-dev \
@@ -24,7 +26,10 @@ RUN set -x \
 
 # Install required PHP extensions for XpressEngine
 RUN set -x \
-    && docker-php-ext-install gd zip mbstring tokenizer curl pdo pdo_mysql fileinfo
+    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr 
+
+RUN set -x \
+    && docker-php-ext-install gd zip mbstring tokenizer curl pdo pdo_mysql fileinfo iconv 
 
 # Enableing the Apache2 rewrite module
 RUN set -x \
