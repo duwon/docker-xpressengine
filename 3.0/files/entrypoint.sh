@@ -22,5 +22,8 @@ if [ ! -f /var/www/html/installer ]; then
     sudo -u www-data php -r "copy('http://start.xpressengine.io/download/installer', 'installer');" && sudo -u www-data php installer install --config=/var/www/html/.xe_install_config.yaml --no-interact
 fi
 
+sudo chown -R :www-data /var/www/html/files
+sudo chmod 770 /var/www/html/files
+
 # Execute the CMD
 exec "$@"

@@ -2,7 +2,7 @@
 #  Dockerfile for installing XpressEngine 1.9
 # --------------------------------------------------
 
-FROM php:7.2-apache
+FROM php:7.4-apache
 
 MAINTAINER Duwon Jung <duwonet@gmail.com>
 
@@ -20,7 +20,10 @@ RUN set -x \
     libjpeg62-turbo-dev \    
     zlib1g-dev \
     libpng-dev \
-    libcurl4-openssl-dev
+    libcurl4-openssl-dev \
+    libzip-dev \
+    zip \
+    libonig-dev
 
 # Download XpressEngine package
 RUN set -x \
@@ -28,7 +31,7 @@ RUN set -x \
 
 # Install required PHP extensions for XpressEngine
 RUN set -x \
-    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr
+    && docker-php-ext-configure gd --with-freetype --with-jpeg
 
 RUN set -x \
     && docker-php-ext-install gd mysqli pdo pdo_mysql \
@@ -49,3 +52,10 @@ RUN set -x \
 RUN set -x \
     && rm -rf /var/lib/apt/lists/* \
     && rm /tmp/xe.zip
+
+ADD entrypoint.sh  /var/www/
+RUN chmod +x /var/www/entrypoint.sh
+
+ENTRYPOINT ["/var/www/entrypoint.sh"]
+
+CMD ["apache2-foreground"]

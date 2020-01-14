@@ -2,7 +2,7 @@
 #  Dockerfile for installing XpressEngine 3
 # --------------------------------------------------
 
-FROM php:7.2-apache
+FROM php:7.4-apache
 
 MAINTAINER Duwon Jung <duwonet@gmail.com>
 
@@ -22,14 +22,17 @@ RUN set -x \
     libpng-dev \
     libcurl4-openssl-dev \
     python \
-    python-pip
+    python-pip \
+    libzip-dev \
+    zip \
+    libonig-dev
 
 # Install required PHP extensions for XpressEngine
 RUN set -x \
-    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr 
+    && docker-php-ext-configure gd -with-freetype --with-jpeg
 
 RUN set -x \
-    && docker-php-ext-install gd zip mbstring tokenizer curl pdo pdo_mysql fileinfo iconv 
+    && docker-php-ext-install gd mysqli pdo pdo_mysql zip mbstring tokenizer curl fileinfo iconv
 
 # Enableing the Apache2 rewrite module
 RUN set -x \
@@ -44,6 +47,7 @@ RUN set -x \
     && rm -rf /var/lib/apt/lists/*
 
 COPY files  /var/www/html
+RUN chmod +x /var/www/html/entrypoint.sh
 
 WORKDIR /var/www/html
 
