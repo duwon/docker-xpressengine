@@ -53,8 +53,9 @@ RUN set -x \
     && rm -rf /var/lib/apt/lists/* \
     && rm /tmp/xe.zip
 
-ADD entrypoint.sh  /var/www/
-RUN chmod +x /var/www/entrypoint.sh
+COPY files  /var/www/
+RUN chmod +x /var/www/entrypoint.sh \
+    && mv /var/www/php.ini /usr/local/etc/php/php.ini
 
 ENTRYPOINT ["/var/www/entrypoint.sh"]
 
